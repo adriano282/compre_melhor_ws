@@ -1,0 +1,4 @@
+com/compremelhor/ws/resource/TesteREST.class
+com/compremelhor/ws/rest/RestServiceTestApplication.class
+com/compremelhor/ws/rest/JaxRsActivator.class
+com/compremelhor/ws/resource/ManufacturerResource.class
