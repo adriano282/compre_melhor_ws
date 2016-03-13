@@ -3,6 +3,7 @@ package com.compremelhor.ws.resource;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -44,7 +45,6 @@ public class ManufacturerResource {
 				"org.jboss.ejb.client.naming");
 		this.context = new InitialContext(jndiProperties);
 		this.manufacturerService = lookupManufacturerService();
-		
 	}
 	
 	private EJBRemote lookupManufacturerService() throws NamingException {
@@ -60,6 +60,13 @@ public class ManufacturerResource {
 	public Manufacturer getManufacturer(@PathParam("id") int id) {
 		logger.log(Level.INFO, "GET /manufacturers/" + id);
 		return (Manufacturer) manufacturerService.get(id);
+	}
+	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Manufacturer> getAllManufacturers() {
+		logger.log(Level.INFO, "GET /manufacturers");
+		return (List<Manufacturer>) manufacturerService.getAll();
 	}
 	
 	@POST
@@ -105,17 +112,19 @@ public class ManufacturerResource {
 		}
 		
 		Manufacturer m = new Gson().fromJson(json, Manufacturer.class);
-				
+		logger.log(Level.WARNING, id + "");
 		try {
 			Manufacturer current = null;
 			if ((current = (Manufacturer) manufacturerService.get(id)) == null) {
 				throw new WebApplicationException(Response.Status.NOT_FOUND);
 			};
+						
+			logger.log(Level.WARNING, current + "");
 			
-			m.setDateCreated(current.getDateCreated());
-			m.setLastUpdated(LocalDateTime.now());
+			current.setName(m.getName());
+			current.setLastUpdated(LocalDateTime.now());
 			
-			manufacturerService.edit(m);
+			manufacturerService.edit(current);
 			return Response.ok(Entity.entity(m, MediaType.APPLICATION_JSON)).build();
 		} catch (InvalidEntityException e) {
 			return Response.status(406).entity(Entity.json(e.getMessage())).build();
