@@ -12,12 +12,12 @@ import com.compremelhor.ws.resource.ManufacturerResource;
 @ApplicationPath("/rest")
 public class JaxRsActivator extends Application {
 	
-	@Override
+	/*@Override
 	public Set<Class<?>> getClasses() {
 		Set<Class<?>> resources = new HashSet<>();
 		resources.add(JacksonObjectMapperProvider.class);
 		resources.add(ManufacturerResource.class);
 		return resources;
-	}
+	}*/
 	
 }
