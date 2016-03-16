@@ -1,10 +1,11 @@
-package com.compremelhor.ws.resource;
+package com.compremelhor.ws.resource.impl;
 
 import javax.naming.NamingException;
 import javax.ws.rs.Path;
 
 import com.compremelhor.model.entity.Manufacturer;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.resource.AbstractResource;
 
 @Path("/manufacturers")
 public class ManufacturerResource extends AbstractResource<Manufacturer> {		

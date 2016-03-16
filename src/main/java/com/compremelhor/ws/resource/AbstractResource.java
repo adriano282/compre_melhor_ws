@@ -25,7 +25,7 @@ import com.google.gson.Gson;
 public abstract class AbstractResource<T extends EntityModel> implements Resource<T> {
 	private static final String JNDI_CLIENT = "org.jboss.ejb.client.naming";
 	private Class<T> clazz;
-	private String rootPath;
+	protected String rootPath;
 	protected EJBRemote<T> service;
 	protected final Context context;
 	
