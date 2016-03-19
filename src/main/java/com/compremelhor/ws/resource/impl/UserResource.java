@@ -23,31 +23,34 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.compremelhor.model.entity.Address;
-import com.compremelhor.model.entity.Partner;
+import com.compremelhor.model.entity.User;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
 import com.compremelhor.ws.resource.AbstractResource;
 import com.google.gson.Gson;
 
-@Path("/partners")
-public class PartnerResource extends AbstractResource<Partner>{
+@Path("/users")
+public class UserResource extends AbstractResource<User>{
 	private String jndiAddress = "ejb:/compre_melhor_ws/AddressEJB!com.compremelhor.model.remote.EJBRemote";
-	public PartnerResource() throws NamingException { super(Partner.class, "partners"); }
-	
-	@SuppressWarnings("unchecked")
-	public EJBRemote<Partner> lookupService() throws NamingException {
-		return (EJBRemote<Partner>) context
-				.lookup("ejb:/compre_melhor_ws/PartnerEJB!com.compremelhor.model.remote.EJBRemote");
+	public UserResource()
+			throws NamingException {
+		super(User.class, "users");
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	public EJBRemote<User> lookupService() throws NamingException {
+		return (EJBRemote<User>) context
+				.lookup("ejb:/compre_melhor_ws/UserEJB!com.compremelhor.model.remote.EJBRemote");
+	}	
+
 	@GET
 	@Path("/{id: [1-9][0-9]*}/addresses")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Address> getAddresses(@PathParam("id") int id) {
 		Set<String> fetches = new HashSet<>();
 		fetches.add("addresses");
-		Partner p = (Partner) service.find(id, fetches);
-		return p.getAddresses();
+		User u = (User) service.find(id, fetches);
+		return u.getAddresses();
 	}
 	
 	@POST
@@ -58,13 +61,13 @@ public class PartnerResource extends AbstractResource<Partner>{
 		ad.setDateCreated(LocalDateTime.now());
 		ad.setLastUpdated(LocalDateTime.now());
 				
-		int partnerId = Integer.valueOf(info.getPathSegments().get(1).toString());
+		int userId = Integer.valueOf(info.getPathSegments().get(1).toString());
 		
-		Partner p = service.find(partnerId);
+		User u = service.find(userId);
 		
-		if (p == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+		if (u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
 		
-		ad.setPartner(p);
+		ad.setUser(u);
 		
 		try {
 			ad = (Address) lookupService(jndiAddress).create(ad);
@@ -83,14 +86,14 @@ public class PartnerResource extends AbstractResource<Partner>{
 		Address ad = getAddressFromInputStream(is);
 		ad.setLastUpdated(LocalDateTime.now());
 				
-		int partnerId = Integer.valueOf(info.getPathSegments().get(1).toString());
+		int userId = Integer.valueOf(info.getPathSegments().get(1).toString());
 		int addressId = Integer.valueOf(info.getPathSegments().get(3).toString());
 		
-		Partner p = service.find(partnerId);
-		ad.setPartner(p);
+		User u = service.find(userId);
+		ad.setUser(u);
 		
-		if (p == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
-		ad.setPartner(p);
+		if (u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+		
 		try {
 			Address current = (Address) lookupService(jndiAddress).find(addressId);
 			
@@ -98,6 +101,7 @@ public class PartnerResource extends AbstractResource<Partner>{
 			ad.setId(addressId);
 			ad.setDateCreated(current.getDateCreated());
 			ad = (Address) lookupService(jndiAddress).edit(ad);
+
 			return Response.ok(Entity.entity(ad, MediaType.APPLICATION_JSON)).build();
 		} catch (InvalidEntityException e) { 
 			return Response.status(406).entity(Entity.json(e.getMessage())).build();

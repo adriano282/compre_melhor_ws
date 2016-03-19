@@ -1,4 +1,4 @@
-package com.compremelhor.ws.resource;
+package com.compremelhor.ws.resource.impl;
 
 import java.util.logging.Level;
 

@@ -4,5 +4,6 @@ com/compremelhor/ws/resource/impl/ManufacturerResource.class
 com/compremelhor/ws/provider/JacksonObjectMapperProvider.class
 com/compremelhor/ws/resource/AbstractResource.class
 com/compremelhor/ws/util/LoggerProducer.class
+com/compremelhor/ws/resource/impl/UserResource.class
 com/compremelhor/ws/rest/JaxRsActivator.class
 com/compremelhor/ws/resource/impl/PartnerResource.class
