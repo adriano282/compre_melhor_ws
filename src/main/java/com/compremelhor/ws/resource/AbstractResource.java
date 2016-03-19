@@ -6,7 +6,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -21,7 +24,6 @@ import com.compremelhor.model.entity.EntityModel;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
 import com.google.gson.Gson;
-
 public abstract class AbstractResource<T extends EntityModel> implements Resource<T> {
 	private static final String JNDI_CLIENT = "org.jboss.ejb.client.naming";
 	private Class<T> clazz;
@@ -29,6 +31,7 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 	protected EJBRemote<T> service;
 	protected final Context context;
 	
+	@Inject Logger logger;
 	
 	public AbstractResource(Class<T> clazz, String rootPath) throws NamingException {
 		final Properties jndiProperties = new Properties();
@@ -65,6 +68,9 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 			return Response.created(URI.create("/"+rootPath+"/" + t.getId())).build();
 		} catch (InvalidEntityException e) { 
 			return Response.status(406).entity(Entity.json(e.getMessage())).build();
+		} catch (Exception e) {
+			logger.log(Level.WARNING, e +"");
+			return null;
 		}
 	}
 	

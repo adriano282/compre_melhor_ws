@@ -66,6 +66,7 @@ public abstract class TestResource<T extends EntityModel> {
 	
 	public void deleteResource(String resourceURI) {
 		Response response = client.target(resourceURI).request().delete();
+		logger.log(Level.INFO, "DELETE /" +root + currentId);
 		Assert.assertEquals(200, response.getStatus());
 	}
 	
