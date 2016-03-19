@@ -12,9 +12,12 @@ import com.compremelhor.ws.runner.OrderedRunner;
 @RunWith(OrderedRunner.class)
 public class PartnerResourceTest extends TestResource<Partner>{
 
+	public String currentAddress = "";
+	
 	public PartnerResourceTest() {
 		super(Partner.class, "partners/");
 	}
+	
 
 	@Test
 	@Order(order = 1)
@@ -37,11 +40,40 @@ public class PartnerResourceTest extends TestResource<Partner>{
 	
 	@Test
 	@Order(order = 4)
+	public void testAddAddress() {
+		addAddress();
+	}
+	
+	@Test
+	@Order(order = 5)
+	public void testDeleteAddress() {
+		deleteAddress();
+		logger.log(Level.INFO, "DELETE " + currentAddress);
+	}
+	
+	@Test
+	@Order(order = 6)
 	public void testDeletePartner() {
 		deletePartner(currentResource);
 		logger.log(Level.INFO, "DELETE /partners/" + currentId);
 	}
 	
+	public void deleteAddress() {
+		deleteResource(currentAddress);
+	}
+	
+	public void addAddress() {
+		String json = "{  "
+				+ "\"street\": \" OUTR TESTE\", "
+				+ "\"number\": \"49\", "
+				+ "\"zipcode\": \"08738290\", "
+				+ "\"quarter\": \"Vila Brasileira\", "
+				+ "\"city\": \"Mogi das Cruzes\","
+				+ "\"state\": \"Sao Paulo\"}";
+		currentAddress = createResource(json, currentResource.concat("/addresses"));
+		logger.log(Level.WARNING, currentAddress);
+	
+	}
 	
 	public void deletePartner(String resourceURI) {
 		deleteResource(resourceURI);

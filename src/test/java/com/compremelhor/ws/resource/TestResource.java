@@ -9,7 +9,9 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 
 import com.compremelhor.model.entity.EntityModel;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -19,14 +21,24 @@ import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 
 public abstract class TestResource<T extends EntityModel> {
 	private Class<T> clazz;
-	private String root;
-	protected static Client client = ClientBuilder.newClient();;
+	public String root;
+	private static Client client;
 	protected String APPLICATION_URL = "http://localhost:8080/compre_melhor_ws/rest/";
+	protected String APPLICATION_ROOT = "http://localhost:8080/compre_melhor_ws/rest/";
 	protected static Logger logger;
 	
 	protected static String currentResource = "";
 	protected static int currentId;
 	
+	@Before
+	public void openClient() {
+		client = ClientBuilder.newClient();
+	}
+	
+	@After	
+	public void closeClient() {
+		client.close();
+	}
 	
 	public TestResource(Class<T> clazz, String root) {
 		this.clazz = clazz;
@@ -53,19 +65,27 @@ public abstract class TestResource<T extends EntityModel> {
 	}
 	
 	public void deleteResource(String resourceURI) {
-		Response response = 
-				ClientBuilder.newClient().target(resourceURI).request().delete();
+		Response response = client.target(resourceURI).request().delete();
 		Assert.assertEquals(200, response.getStatus());
 	}
 	
 	public String createResource(String json) {
-		logger.log(Level.WARNING, APPLICATION_URL);
-		Response response = ClientBuilder.newClient().target(APPLICATION_URL)
+		Response response = client.target(APPLICATION_URL)
 			.request()
 			.post(Entity.json(json));
 		
 		Assert.assertEquals(201, response.getStatus());
 		logger.log(Level.INFO, "POST /" + root + "\nBODY: " + json);
+		return response.getLocation().toString();
+	}
+	
+	public String createResource(String json, String url) {
+		Response response = client.target(url)
+			.request()
+			.post(Entity.json(json));
+		
+		Assert.assertEquals(201, response.getStatus());
+		logger.log(Level.INFO, "POST /" + url + "\nBODY: " + json);
 		return response.getLocation().toString();
 	}
 	

@@ -42,16 +42,16 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 	abstract public EJBRemote<T> lookupService() throws NamingException;
 	
 	public T getResource(@PathParam("id") int id) {
-		return service.get(id);
+		return service.find(id);
 	}
 	
 	public List<T> getAllResources() {
-		return service.getAll();
+		return service.findAll();
 	}
 	
 	public List<T> getAllResources(@QueryParam("start") int start,
 											 @QueryParam("size") int size) {
-		return service.getAll(start, size);
+		return service.findAll(start, size);
 	}
 	
 	public Response createResource(InputStream is) {
@@ -69,7 +69,8 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 	}
 	
 	public T deleteResource(@PathParam("id") int id) {
-		T t = service.get(id);
+		T t = service.find(id);
+		if (t == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
 		service.delete(t);
 		return t;
 	}
@@ -77,7 +78,7 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 	public Response updateResource(@PathParam("id") int id, InputStream is) {
 		T t = getEntityFromInputStream(is);
 		
-		T current = service.get(id);		
+		T current = service.find(id);		
 		if (current == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
@@ -92,6 +93,11 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 		} catch (InvalidEntityException e) {
 			return Response.status(406).entity(Entity.json(e.getMessage())).build();
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public EJBRemote<EntityModel> lookupService(String jndi) throws NamingException {
+		return (EJBRemote<EntityModel>) context.lookup(jndi);
 	}
 	
 	public T getEntityFromInputStream(InputStream is) {
