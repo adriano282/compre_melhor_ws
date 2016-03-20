@@ -45,7 +45,9 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 	abstract protected EJBRemote<T> lookupService() throws NamingException;
 	
 	public T getResource(@PathParam("id") int id) {
-		return service.find(id);
+		T t = service.find(id);
+		if (t == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+		return t; 
 	}
 	
 	public List<T> getAllResources() {
@@ -83,8 +85,7 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 	
 	public Response updateResource(@PathParam("id") int id, InputStream is) {
 		T t = getEntityFromInputStream(is);
-		logger.log(Level.INFO, t + "");
-		
+				
 		T current = service.find(id);		
 		if (current == null) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);

@@ -2,6 +2,7 @@ com/compremelhor/ws/resource/impl/SkuResource.class
 com/compremelhor/ws/resource/impl/AddressResource.class
 com/compremelhor/ws/resource/Resource.class
 com/compremelhor/ws/resource/impl/ManufacturerResource.class
+com/compremelhor/ws/resource/impl/StockResource.class
 com/compremelhor/ws/provider/JacksonObjectMapperProvider.class
 com/compremelhor/ws/resource/impl/CategoryResource.class
 com/compremelhor/ws/resource/AbstractResource.class

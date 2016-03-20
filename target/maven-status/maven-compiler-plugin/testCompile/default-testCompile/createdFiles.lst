@@ -7,3 +7,4 @@ com/compremelhor/ws/annotation/Order.class
 com/compremelhor/ws/resource/impl/TestResource.class
 com/compremelhor/ws/resource/impl/SkuResourceTest.class
 com/compremelhor/ws/resource/impl/ManufacturerResourceTest.class
+com/compremelhor/ws/resource/impl/StockResourceTest.class

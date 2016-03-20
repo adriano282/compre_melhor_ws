@@ -2,6 +2,7 @@ package com.compremelhor.ws.resource.impl;
 
 import java.util.logging.Level;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -12,13 +13,11 @@ import com.compremelhor.ws.runner.OrderedRunner;
 @RunWith(OrderedRunner.class)
 public class PartnerResourceTest extends TestResource<Partner>{
 
+	public static Partner partner;	
 	public String currentAddress = "";
 	
-	public PartnerResourceTest() {
-		super(Partner.class, "partners/");
-	}
+	public PartnerResourceTest() { super(Partner.class, "partners/"); }
 	
-
 	@Test
 	@Order(order = 1)
 	public void testCreatePartner() {
@@ -72,16 +71,26 @@ public class PartnerResourceTest extends TestResource<Partner>{
 				+ "\"state\": \"Sao Paulo\"}";
 		currentAddress = createResource(json, currentResource.concat("/addresses"));
 		logger.log(Level.WARNING, currentAddress);
-	
 	}
 	
 	public void deletePartner(String resourceURI) {
 		deleteResource(resourceURI);
 	}
 	
+	public void deletePartner() {
+		currentResource = APPLICATION_ROOT.concat("partners/").concat(String.valueOf(partner.getId()));
+		deleteResource(currentResource);
+		
+		// Verify if partner has been deleted
+		Assert.assertNull(getResource());
+	}
+	
 	public String createPartner() {
 		String json = "{\"name\":\"Partner test\"}";
-		return createResource(json);
+		
+		String result = createResource(json);
+		partner = getResource();
+		return result;
 	}
 	
 	

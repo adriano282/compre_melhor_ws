@@ -2,6 +2,7 @@
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/rest/JaxRsActivator.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/UserResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/provider/JacksonObjectMapperProvider.java
+/home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/StockResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/CategoryResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/PartnerResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/SkuResource.java
