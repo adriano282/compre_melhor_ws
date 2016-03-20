@@ -22,7 +22,7 @@ import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 public abstract class TestResource<T extends EntityModel> {
 	private Class<T> clazz;
 	public String root;
-	private static Client client;
+	private Client client;
 	protected String APPLICATION_URL = "http://localhost:8080/compre_melhor_ws/rest/";
 	protected String APPLICATION_ROOT = "http://localhost:8080/compre_melhor_ws/rest/";
 	protected static Logger logger;
@@ -48,36 +48,52 @@ public abstract class TestResource<T extends EntityModel> {
 		
 	}
 	
-	public void getResource() {
+	public T getResource() {
+		openClient();
+
+		logger.log(Level.WARNING, currentResource);
 		String json = client.target(currentResource).request().get(String.class);
 		
 		T t = getEntityFromJson(json);
 		currentId = t.getId();
 		Assert.assertNotEquals(0, currentId);
 		logger.log(Level.INFO, "GET /" +root + currentId);
+		
+		closeClient();
+		return t; 
 	}
 	
-	public void updateResorce(String json) {
+	public void updateResorce(String json) {		
+		openClient();
 		Response response = 
 				client.target(currentResource).request().put(Entity.json(json));
 		Assert.assertEquals(200, response.getStatus());
 		logger.log(Level.INFO, "PUT /" + root + currentId + "\nBODY: " + json);
+		closeClient();
 	}
 	
 	public void deleteResource(String resourceURI) {
+		openClient();
 		Response response = client.target(resourceURI).request().delete();
 		logger.log(Level.INFO, "DELETE /" +root + currentId);
 		Assert.assertEquals(200, response.getStatus());
+		closeClient();
 	}
 	
 	public String createResource(String json) {
+		openClient();
+		
 		Response response = client.target(APPLICATION_URL)
 			.request()
 			.post(Entity.json(json));
 		
+		Assert.assertNotNull(response);
 		Assert.assertEquals(201, response.getStatus());
 		logger.log(Level.INFO, "POST /" + root + "\nBODY: " + json);
-		return response.getLocation().toString();
+		currentResource = response.getLocation().toString();
+		
+		closeClient();
+		return currentResource;
 	}
 	
 	public String createResource(String json, String url) {

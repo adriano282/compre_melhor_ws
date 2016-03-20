@@ -42,7 +42,7 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 		this.rootPath = rootPath;
 	}
 	
-	abstract public EJBRemote<T> lookupService() throws NamingException;
+	abstract protected EJBRemote<T> lookupService() throws NamingException;
 	
 	public T getResource(@PathParam("id") int id) {
 		return service.find(id);
@@ -83,6 +83,7 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 	
 	public Response updateResource(@PathParam("id") int id, InputStream is) {
 		T t = getEntityFromInputStream(is);
+		logger.log(Level.INFO, t + "");
 		
 		T current = service.find(id);		
 		if (current == null) {

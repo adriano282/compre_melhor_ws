@@ -1,7 +1,5 @@
 package com.compremelhor.ws.resource.impl;
 
-import java.util.logging.Level;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -12,6 +10,9 @@ import com.compremelhor.ws.runner.OrderedRunner;
 @RunWith(OrderedRunner.class)
 public class ManufacturerResourceTest extends TestResource<Manufacturer>{
 
+	public String manufacturerResource;
+	public String manufacturerId;
+	
 	public ManufacturerResourceTest() {
 		super(Manufacturer.class, "manufacturers/");
 	}
@@ -20,6 +21,7 @@ public class ManufacturerResourceTest extends TestResource<Manufacturer>{
 	@Order(order = 1)
 	public void testCreateManufacturer() {
 		currentResource = createManufacturer();
+		manufacturerResource = currentResource;
 	}
 	
 	@Test
@@ -39,7 +41,6 @@ public class ManufacturerResourceTest extends TestResource<Manufacturer>{
 	@Order(order = 4)
 	public void testDeleteManufacturer() {
 		deleteManufacturer(currentResource);
-		logger.log(Level.INFO, "DELETE /manufacturers/" + currentId);
 	}
 	
 	public void deleteManufacturer(String resourceURI) {
@@ -48,6 +49,8 @@ public class ManufacturerResourceTest extends TestResource<Manufacturer>{
 
 	public String createManufacturer() {
 		String json = "{ \"name\" : \"FABRICANTE TESTE\" }";
-		return createResource(json);
+		manufacturerResource = createResource(json);
+		return manufacturerResource;
 	}
+	
 }
