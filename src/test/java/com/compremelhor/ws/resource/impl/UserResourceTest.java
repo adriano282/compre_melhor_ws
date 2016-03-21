@@ -1,84 +1,95 @@
 package com.compremelhor.ws.resource.impl;
 
-import java.util.logging.Level;
-
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.entity.User;
 import com.compremelhor.ws.annotation.Order;
 import com.compremelhor.ws.runner.OrderedRunner;
 
 @RunWith(OrderedRunner.class)
 public class UserResourceTest extends TestResource<User>{
-
-	public String currentAddress = "";
+	public static Address address;
+	public static User user;
 	
-	public UserResourceTest() {
-		super(User.class, "users");
-	}
+	public UserResourceTest() { super(User.class, "users"); }
 
 	@Test
 	@Order(order = 1)
-	public void shouldCreateUser() {
-		currentResource = createUser();
-	}
-	
+	public void shouldCreateUser() { createUser(); }
+
 	@Test
 	@Order(order = 2)
-	public void shouldGetAnUser() {
-		getResource();
+	public void shouldUpdateUser() {		
+		user.setUsername("Adriano de Jesus do Nascimento");
+		user.setDocument("427618444");
+		user.setDocumentType(User.DocumentType.CPF);
+		
+		updateResorce(myGson.toJson(user, User.class));
+		user = getResource();
 	}
 	
 	@Test
 	@Order(order = 3)
-	public void shouldUpdateUser() {
-		String json = "{\"username\": \"Adriano de Jesus do Nascimento\", "
-				+ "\"document\": \"427618444\","
-				+ "\"documentType\" : \"CPF\","
-				+ "\"password\": \"teste123\","
-				+ "\"addresses\" : []}";
-		updateResorce(json);
-	}
-	
-	@Test
-	@Order(order = 4)
 	public void shouldAddAnAddress() {
 		addAddress();
 	}
 	
 	@Test
-	@Order(order = 5)
+	@Order(order = 4)
 	public void shouldDeleteAddress() {
-		deleteResource(currentAddress);
-		logger.log(Level.INFO, "DELETE " + currentAddress);
+		deleteAddress();
 	}
 	
 	@Test
-	@Order(order = 6)
+	@Order(order = 5)
 	public void shouldDeleteUser() {
+		deleteUser();
+	}
+	
+	public void deleteUser() {
+		currentResource = APPLICATION_ROOT.concat("users/").concat(String.valueOf(user.getId()));
 		deleteResource(currentResource);
-		logger.log(Level.INFO, "DELETE /users/" + currentId);
 	}
+	
 	public void addAddress() {
-		String json = "{  "
-				+ "\"street\": \" OUTR TESTE\", "
-				+ "\"number\": \"49\", "
-				+ "\"zipcode\": \"08738290\", "
-				+ "\"quarter\": \"Vila Brasileira\", "
-				+ "\"city\": \"Mogi das Cruzes\","
-				+ "\"state\": \"Sao Paulo\"}";
-		currentAddress = createResource(json, currentResource.concat("/addresses"));
-		logger.log(Level.WARNING, currentAddress);
-	}
-
-	public String createUser() {
-		String json = "{\"username\": \"Adriano de Jesus\", "
-				+ "\"document\": \"427610576\","
-				+ "\"documentType\" : \"CPF\","
-				+ "\"password\": \"teste123\","
-				+ "\"addresses\" : []}";
-		return createResource(json);
+		address = new Address();
+		address.setStreet("Outro test");
+		address.setNumber("49");
+		address.setZipcode("08738290");
+		address.setCity("Mogi das Cruzes");
+		address.setState("Sao Paulo");
+		address.setQuarter("Vila Brasileira");
+		address.setUser(user);
 		
+		String uri = APPLICATION_ROOT.concat("addresses");
+		address = getResource(createResource(myGson.toJson(address, Address.class), uri), Address.class);
+	}
+	
+	public void deleteAddress() {
+		String uri = APPLICATION_ROOT.concat("addresses/").concat(String.valueOf(address.getId()));
+		deleteResource(uri);
+	}
+	
+	public void createUser() {
+		user = new User();
+		user.setUsername("Adriano de Jesus");
+		user.setDocument("427610576");
+		user.setDocumentType(User.DocumentType.CPF);
+		user.setPasswordHash("teste123");
+		
+		// Create the user
+		createResource(myGson.toJson(user, User.class));
+		user = getResource();
+		
+		// Verify if has been created
+		Assert.assertNotNull(user);
+		
+		// Verify data persisted
+		Assert.assertEquals("Adriano de Jesus", user.getUsername());
+		Assert.assertEquals("427610576", user.getDocument());		
+		Assert.assertEquals(User.DocumentType.CPF, user.getDocumentType());
 	}
 }

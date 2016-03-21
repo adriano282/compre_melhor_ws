@@ -1,5 +1,6 @@
 package com.compremelhor.ws.resource.impl;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -9,7 +10,9 @@ import com.compremelhor.ws.runner.OrderedRunner;
 
 @RunWith(OrderedRunner.class)
 public class CategoryResourceTest extends TestResource<Category>{
-
+	
+	public static Category category;
+	
 	public CategoryResourceTest() {
 		super(Category.class, "categories/");
 		// TODO Auto-generated constructor stub
@@ -18,27 +21,41 @@ public class CategoryResourceTest extends TestResource<Category>{
 	@Test
 	@Order(order =1 )
 	public void shouldCreateCategory() {
-		String json = "{\"name\":\"Categoria Teste\"}";
-		currentResource = createResource(json);
-		
-	}
-	
-	@Test
-	@Order(order = 2 )
-	public void shouldGetAnCategory() {
-		getResource();
+		createCategory();		
 	}
 	
 	@Test
 	@Order(order = 3 )
-	public void updateManufacturer() {
-		String json = "{\"name\": \"NOME CATEGORIA ALTERADO\"}";
-		updateResorce(json);
+	public void updateCategory() {
+		category.setName("Nome Alterado");
+		updateResorce(myGson.toJson(category, Category.class));
 	}
 	
 	@Test
 	@Order(order = 4 )
 	public void deleleCategory() {
+		deleteCategory();
+	}
+	
+	public void createCategory() {
+		Category c = new Category();
+		c.setName("Gelados");
+		
+		// Create category
+		createResource(myGson.toJson(c, Category.class));
+		category = getResource();
+		
+		// Verify if has been created
+		Assert.assertNotNull(category);
+		
+		// Verify data
+		Assert.assertEquals("Gelados", category.getName());
+	}
+	
+	public void deleteCategory() {
+		currentResource = APPLICATION_ROOT.concat("categories/").concat(String.valueOf(category.getId()));
 		deleteResource(currentResource);
+		
+		Assert.assertNull(getResource());
 	}
 }

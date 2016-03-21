@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 public class SkuResourceTest extends TestResource<Sku> {
 
 	private static ManufacturerResourceTest manufacturerResource = new ManufacturerResourceTest();
+	private static CategoryResourceTest categoryResource = new CategoryResourceTest();
 	public static Sku sku;
 		
 	public SkuResourceTest() { super(Sku.class, "skus/"); }
@@ -61,16 +62,19 @@ public class SkuResourceTest extends TestResource<Sku> {
 		
 		// Delete Manufacturer
 		manufacturerResource.deleteManufacturer();
+		
+		// Delete Category
+		categoryResource.deleleCategory();
 	}
 	
 	public void createSkuAndBackward() {
 		
 		// Create Manufacturer
 		manufacturerResource.createManufacturer();
-	
-		Category c = new Category();
-		c.setName("GELADOS");
 		
+		// Create Category
+		categoryResource.createCategory();
+	
 		Code code = new Code();
 		code.setType(Code.CodeType.BARCODE);
 		code.setCode("COD001");
@@ -79,7 +83,7 @@ public class SkuResourceTest extends TestResource<Sku> {
 		sku.setName("MAIONESE");
 		sku.setDescription("MAIONESE DE BAIXA CALORIA");
 		sku.setUnit(Sku.UnitType.UN);
-		sku.addCategory(c);
+		sku.addCategory(CategoryResourceTest.category);
 		sku.setManufacturer(ManufacturerResourceTest.manufacturer);
 		sku.setCode(code);
 		

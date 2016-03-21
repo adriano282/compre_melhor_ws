@@ -6,5 +6,6 @@ com/compremelhor/ws/runner/OrderedRunner$1.class
 com/compremelhor/ws/annotation/Order.class
 com/compremelhor/ws/resource/impl/TestResource.class
 com/compremelhor/ws/resource/impl/SkuResourceTest.class
+com/compremelhor/ws/resource/impl/AllTests.class
 com/compremelhor/ws/resource/impl/ManufacturerResourceTest.class
 com/compremelhor/ws/resource/impl/StockResourceTest.class

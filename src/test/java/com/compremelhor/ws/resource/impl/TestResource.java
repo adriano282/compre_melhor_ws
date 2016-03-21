@@ -65,6 +65,19 @@ public abstract class TestResource<T extends EntityModel> {
 		return t; 
 	}
 	
+	public <K extends EntityModel> K getResource(String uri, Class<K> clazz) {
+		openClient();
+		String json;
+		try {
+			 json = client.target(uri).request().get(String.class);
+		} catch (WebApplicationException e) {
+			return null;
+		}		
+		K t = getEntityFromJson(json, clazz);
+		closeClient();
+		return t; 
+	}
+	
 	public void updateResorce(String json) {		
 		openClient();
 		logger.log(Level.INFO, "PUT /" + currentResource + "\nBODY: " + json);
@@ -76,7 +89,7 @@ public abstract class TestResource<T extends EntityModel> {
 	
 	public void deleteResource(String resourceURI) {
 		openClient();
-		logger.log(Level.INFO, "DELETE /" +resourceURI);
+		logger.log(Level.INFO, "DELETE /" + currentResource);
 		Response response = client.target(resourceURI).request().delete();		
 		Assert.assertEquals(200, response.getStatus());
 		closeClient();
@@ -128,4 +141,27 @@ public abstract class TestResource<T extends EntityModel> {
 		}
 		return t;
 	}
+	
+	protected <K extends EntityModel> K getEntityFromJson(String json, Class<K> clazz) {
+		if (json == null) return null;
+		
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JSR310Module());
+		K t = null; 
+		
+		try {
+			t = mapper.readValue(json, clazz);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return t;
+	}
+
 }

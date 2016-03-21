@@ -17,7 +17,7 @@ public class StockResourceTest extends TestResource<Stock>{
 	// Others Tests Resources necessary for this
 	private static SkuResourceTest skuResourceTest = new SkuResourceTest();
 	private static PartnerResourceTest partnerResourceTest = new PartnerResourceTest();
-	
+		
 	public static Stock stock;
 	public static SkuPartner skuPartner;
 	

@@ -32,8 +32,7 @@ import com.google.gson.Gson;
 @Path("/users")
 public class UserResource extends AbstractResource<User>{
 	private String jndiAddress = "ejb:/compre_melhor_ws/AddressEJB!com.compremelhor.model.remote.EJBRemote";
-	public UserResource()
-			throws NamingException {
+	public UserResource() throws NamingException {
 		super(User.class, "users");
 	}
 
