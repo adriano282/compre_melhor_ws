@@ -1,7 +1,5 @@
 package com.compremelhor.ws.resource.impl;
 
-import java.util.logging.Level;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

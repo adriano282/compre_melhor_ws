@@ -26,13 +26,6 @@ public class StockResourceTest extends TestResource<Stock>{
 	@Test
 	@Order(order = 1)
 	public void shoudCreateSkuPartnerAndStock() {
-		
-		// Create Category, Manufacturer And SKU
-		skuResourceTest.createSkuAndBackward();
-		
-		// Create Partner
-		partnerResourceTest.createPartner();
-		
 		// Create Stock and SkuPartner
 		createStockAndSkuPartner();		
 	}
@@ -63,6 +56,12 @@ public class StockResourceTest extends TestResource<Stock>{
 	}
 	
 	public void createStockAndSkuPartner() {
+		// Create Category, Manufacturer And SKU
+		skuResourceTest.createSkuAndBackward();
+		
+		// Create Partner
+		partnerResourceTest.createPartner();
+		
 		skuPartner = new SkuPartner();
 		skuPartner.setSku(SkuResourceTest.sku);
 		skuPartner.setPartner(PartnerResourceTest.partner);

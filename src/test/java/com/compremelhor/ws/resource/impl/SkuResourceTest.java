@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.compremelhor.model.entity.Category;
 import com.compremelhor.model.entity.Code;
 import com.compremelhor.model.entity.Sku;
 import com.compremelhor.ws.annotation.Order;

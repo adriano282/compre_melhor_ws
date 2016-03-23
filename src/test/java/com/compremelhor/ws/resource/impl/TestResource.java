@@ -110,12 +110,16 @@ public abstract class TestResource<T extends EntityModel> {
 	}
 	
 	public String createResource(String json, String url) {
+		openClient();
 		Response response = client.target(url)
 			.request()
 			.post(Entity.json(json));
 		
+		logger.log(Level.WARNING, response + "");
+		logger.log(Level.INFO, "POST /" + url + "\nBODY: " + json);
 		Assert.assertEquals(201, response.getStatus());
 		logger.log(Level.INFO, "POST /" + url + "\nBODY: " + json);
+		closeClient();
 		return response.getLocation().toString();
 	}
 	

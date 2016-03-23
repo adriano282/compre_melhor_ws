@@ -1,4 +1,5 @@
 com/compremelhor/ws/runner/OrderedRunner.class
+com/compremelhor/ws/resource/impl/PurchaseResourceTest.class
 com/compremelhor/ws/resource/impl/UserResourceTest.class
 com/compremelhor/ws/resource/impl/PartnerResourceTest.class
 com/compremelhor/ws/resource/impl/CategoryResourceTest.class
