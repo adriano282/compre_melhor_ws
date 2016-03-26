@@ -16,7 +16,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.compremelhor.model.entity.EntityModel;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 
+@TokenAuthenticated
 public interface Resource<T extends EntityModel> {
 	
 	@GET

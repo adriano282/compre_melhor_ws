@@ -5,9 +5,11 @@ import javax.ws.rs.Path;
 
 import com.compremelhor.model.entity.Purchase;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 
 @Path("/purchases")
+@TokenAuthenticated
 public class PurchaseResource extends AbstractResource<Purchase>{
 
 	public PurchaseResource() throws NamingException {

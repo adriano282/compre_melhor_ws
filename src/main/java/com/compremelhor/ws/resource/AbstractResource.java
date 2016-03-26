@@ -19,6 +19,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.compremelhor.model.entity.EntityModel;
 import com.compremelhor.model.exception.InvalidEntityException;
@@ -69,17 +70,20 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 		try {
 			t = service.create(t);
 			return Response.created(URI.create("/"+rootPath+"/" + t.getId())).build();
-		} catch (InvalidEntityException e) { 
-			return Response.status(406).entity(Entity.json(e.getMessage())).build();
+		} catch (InvalidEntityException e) {
+			ResponseBuilder builder = Response.status(406);
+			builder.header("errors", e.getMessage());
+			return builder.build();
+			
 		} catch (Exception e) {
 			logger.log(Level.WARNING, e +"");
-			return null;
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	public T deleteResource(@PathParam("id") int id) {
 		T t = service.find(id);
-		if (t == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+		if (t == null) throw new WebApplicationException(Response.Status.GONE);
 		service.delete(t);
 		return t;
 	}

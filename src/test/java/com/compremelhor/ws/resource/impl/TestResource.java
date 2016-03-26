@@ -120,7 +120,8 @@ public abstract class TestResource<T extends EntityModel> {
 		Assert.assertEquals(201, response.getStatus());
 		logger.log(Level.INFO, "POST /" + url + "\nBODY: " + json);
 		closeClient();
-		return response.getLocation().toString();
+		String location = response.getLocation().toString();
+		return location;
 	}
 	
 	protected T getEntityFromJson(String json) {

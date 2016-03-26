@@ -5,9 +5,11 @@ import javax.ws.rs.Path;
 
 import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 
 @Path("/addresses")
+@TokenAuthenticated
 public class AddressResource extends AbstractResource<Address>{
 	public AddressResource() throws NamingException {
 		super(Address.class, "addresses");

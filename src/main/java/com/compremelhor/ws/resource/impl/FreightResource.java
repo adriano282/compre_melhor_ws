@@ -28,10 +28,12 @@ import com.compremelhor.model.entity.Freight;
 import com.compremelhor.model.entity.Purchase;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 import com.google.gson.Gson;
 
 @Path("/purchases/{id:[1-9][0-9]*}/freight")
+@TokenAuthenticated
 public class FreightResource {
 	private String jndiPurchase = 
 			"ejb:/compre_melhor_ws/PurchaseEJB!com.compremelhor.model.remote.EJBRemote";

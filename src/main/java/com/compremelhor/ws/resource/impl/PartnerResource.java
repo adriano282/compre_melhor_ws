@@ -26,10 +26,12 @@ import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.entity.Partner;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 import com.google.gson.Gson;
 
 @Path("/partners")
+@TokenAuthenticated
 public class PartnerResource extends AbstractResource<Partner>{
 	private String jndiAddress = "ejb:/compre_melhor_ws/AddressEJB!com.compremelhor.model.remote.EJBRemote";
 	public PartnerResource() throws NamingException { super(Partner.class, "partners"); }

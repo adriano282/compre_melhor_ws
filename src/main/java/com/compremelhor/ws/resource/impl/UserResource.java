@@ -15,6 +15,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
@@ -26,10 +27,12 @@ import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.entity.User;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 import com.google.gson.Gson;
 
 @Path("/users")
+@TokenAuthenticated
 public class UserResource extends AbstractResource<User>{
 	private String jndiAddress = "ejb:/compre_melhor_ws/AddressEJB!com.compremelhor.model.remote.EJBRemote";
 	public UserResource() throws NamingException {
@@ -108,7 +111,20 @@ public class UserResource extends AbstractResource<User>{
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 	}	
-
+	
+	@GET
+	@Path("/")
+	@Produces(MediaType.APPLICATION_JSON)
+	public User getResourceByAttribute(@QueryParam("attributeName") String attributeName,
+			 @QueryParam("attributeValue") String attributeValue) {
+		//attributeValue = attributeValue.replaceAll("+", " ");
+		
+		User u  = service.find(attributeName, attributeValue);
+		
+		if (u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+		return u;
+	}
+	
 	private Address getAddressFromInputStream(InputStream is) {
 		String json = "";
 		try (Scanner s = new Scanner(is)) {

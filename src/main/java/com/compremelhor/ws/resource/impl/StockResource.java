@@ -12,9 +12,11 @@ import javax.ws.rs.core.Response;
 import com.compremelhor.model.entity.Stock;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 
 @Path("/stock")
+@TokenAuthenticated
 public class StockResource extends AbstractResource<Stock> {
 
 	public StockResource()

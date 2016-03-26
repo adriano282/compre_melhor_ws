@@ -5,9 +5,11 @@ import javax.ws.rs.Path;
 
 import com.compremelhor.model.entity.Manufacturer;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 
 @Path("/manufacturers")
+@TokenAuthenticated
 public class ManufacturerResource extends AbstractResource<Manufacturer> {		
 	
 	public ManufacturerResource() throws NamingException {

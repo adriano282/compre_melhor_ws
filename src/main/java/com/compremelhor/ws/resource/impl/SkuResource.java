@@ -9,9 +9,11 @@ import javax.ws.rs.PathParam;
 
 import com.compremelhor.model.entity.Sku;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 
 @Path("/skus")
+@TokenAuthenticated
 public class SkuResource extends AbstractResource<Sku> {
 
 	public SkuResource() throws NamingException {

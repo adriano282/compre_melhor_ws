@@ -30,10 +30,12 @@ import com.compremelhor.model.entity.Purchase;
 import com.compremelhor.model.entity.PurchaseLine;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
+import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
 import com.google.gson.Gson;
 
 @Path("/purchases/{id:[1-9][0-9]*}/lines")
+@TokenAuthenticated
 public class PurchaseLineResource {
 	private String jndiLine = 
 			"ejb:/compre_melhor_ws/PurchaseLineEJB!com.compremelhor.model.remote.EJBRemote";
