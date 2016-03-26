@@ -2,4 +2,6 @@
 *.war
 *.zip
 *.jar
+*.properties
+
 

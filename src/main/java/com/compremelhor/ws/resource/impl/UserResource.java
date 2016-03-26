@@ -3,8 +3,10 @@ package com.compremelhor.ws.resource.impl;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -15,7 +17,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.UriInfo;
 import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.entity.User;
 import com.compremelhor.model.exception.InvalidEntityException;
+import com.compremelhor.model.exception.UnknownAttributeException;
 import com.compremelhor.model.remote.EJBRemote;
 import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
@@ -115,11 +117,15 @@ public class UserResource extends AbstractResource<User>{
 	@GET
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
-	public User getResourceByAttribute(@QueryParam("attributeName") String attributeName,
-			 @QueryParam("attributeValue") String attributeValue) {
-		//attributeValue = attributeValue.replaceAll("+", " ");
-		
-		User u  = service.find(attributeName, attributeValue);
+	public User getResourceByAttribute(@Context UriInfo info) {
+		Map<String, String> map = new HashMap<String,String>();
+		info.getQueryParameters(true).forEach((s, v) -> map.put(s, v.get(0)));
+		User u = null;
+		try {
+			u  = service.find(map);
+		} catch (UnknownAttributeException e) {
+			throw new WebApplicationException(Response.Status.BAD_REQUEST);
+		}
 		
 		if (u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
 		return u;

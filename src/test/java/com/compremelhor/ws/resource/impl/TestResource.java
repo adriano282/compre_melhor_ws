@@ -22,7 +22,8 @@ import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.google.gson.Gson;
 
 public abstract class TestResource<T extends EntityModel> {
-	
+	private final String AUTHORIZATION = "authorization";
+	private final String TOKEN = "token_app DG4OjT9ciuPtHk1p7Fi/kg==";
 	protected static Gson myGson = new Gson();
 	private Class<T> clazz;
 	public String root;
@@ -56,7 +57,8 @@ public abstract class TestResource<T extends EntityModel> {
 		openClient();
 		String json;
 		try {
-			 json = client.target(currentResource).request().get(String.class);
+			 json = client.target(currentResource).request().header(AUTHORIZATION, TOKEN)
+					 .get(String.class);
 		} catch (WebApplicationException e) {
 			return null;
 		}		
@@ -69,7 +71,7 @@ public abstract class TestResource<T extends EntityModel> {
 		openClient();
 		String json;
 		try {
-			 json = client.target(uri).request().get(String.class);
+			 json = client.target(uri).request().header(AUTHORIZATION, TOKEN).get(String.class);
 		} catch (WebApplicationException e) {
 			return null;
 		}		
@@ -82,7 +84,7 @@ public abstract class TestResource<T extends EntityModel> {
 		openClient();
 		logger.log(Level.INFO, "PUT /" + currentResource + "\nBODY: " + json);
 		Response response = 
-				client.target(currentResource).request().put(Entity.json(json));
+				client.target(currentResource).request().header(AUTHORIZATION, TOKEN).put(Entity.json(json));
 		Assert.assertEquals(200, response.getStatus());		
 		closeClient();
 	}
@@ -90,7 +92,7 @@ public abstract class TestResource<T extends EntityModel> {
 	public void deleteResource(String resourceURI) {
 		openClient();
 		logger.log(Level.INFO, "DELETE /" + currentResource);
-		Response response = client.target(resourceURI).request().delete();		
+		Response response = client.target(resourceURI).request().header(AUTHORIZATION, TOKEN).delete();		
 		Assert.assertEquals(200, response.getStatus());
 		closeClient();
 	}
@@ -99,7 +101,7 @@ public abstract class TestResource<T extends EntityModel> {
 		openClient();
 		logger.log(Level.INFO, "POST /" + root + "\nBODY: " + json);
 		Response response = client.target(APPLICATION_URL)
-			.request()
+			.request().header(AUTHORIZATION, TOKEN)
 			.post(Entity.json(json));
 		
 		Assert.assertNotNull(response);
@@ -112,7 +114,7 @@ public abstract class TestResource<T extends EntityModel> {
 	public String createResource(String json, String url) {
 		openClient();
 		Response response = client.target(url)
-			.request()
+			.request().header(AUTHORIZATION, TOKEN)
 			.post(Entity.json(json));
 		
 		logger.log(Level.WARNING, response + "");
