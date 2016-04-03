@@ -76,7 +76,7 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 			return builder.build();
 			
 		} catch (Exception e) {
-			logger.log(Level.WARNING, e +"");
+			logger.log(Level.WARNING, e.getMessage());
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -104,7 +104,13 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 			service.edit(t);
 			return Response.ok(Entity.entity(t, MediaType.APPLICATION_JSON)).build();
 		} catch (InvalidEntityException e) {
-			return Response.status(406).entity(Entity.json(e.getMessage())).build();
+			ResponseBuilder builder = Response.status(406);
+			builder.header("errors", e.getMessage());
+			return builder.build();
+			
+		} catch (Exception e) {
+			logger.log(Level.WARNING, e.getMessage());
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 	}
 	

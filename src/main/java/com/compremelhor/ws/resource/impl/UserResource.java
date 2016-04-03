@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 import javax.naming.NamingException;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -47,6 +48,41 @@ public class UserResource extends AbstractResource<User>{
 				.lookup("ejb:/compre_melhor_ws/UserEJB!com.compremelhor.model.remote.EJBRemote");
 	}	
 
+	@GET
+	@Path("/{id: [1-9][0-9]*}/addresses/{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON) 
+	public Address getAddress(@Context UriInfo info) {
+		int userId = Integer.valueOf(info.getPathSegments().get(1).toString());
+		int addressId = Integer.valueOf(info.getPathSegments().get(3).toString());
+		
+		try {
+			if (lookupService().find(userId) == null) throw new WebApplicationException(Response.Status.NOT_FOUND);			
+			Address address = (Address) lookupService(jndiAddress).find(addressId);
+			if (address == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+			return address;
+		} catch (NamingException e) {
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@DELETE
+	@Path("/{id: [1-9][0-9]*}/addresses/{id: [1-9][0-9]*}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Address removeAddress(@Context UriInfo info) {
+		int userId = Integer.valueOf(info.getPathSegments().get(1).toString());
+		int addressId = Integer.valueOf(info.getPathSegments().get(3).toString());
+		
+		try {
+			if (lookupService().find(userId) == null) throw new WebApplicationException(Response.Status.NOT_FOUND);			
+			Address address = (Address) lookupService(jndiAddress).find(addressId);
+			if (address == null) throw new WebApplicationException(Response.Status.GONE);
+			lookupService(jndiAddress).delete(address);
+			return address;
+		} catch (NamingException e) {
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
 	@GET
 	@Path("/{id: [1-9][0-9]*}/addresses")
 	@Produces(MediaType.APPLICATION_JSON)
