@@ -4,7 +4,11 @@ import static javax.naming.Context.URL_PKG_PREFIXES;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -23,14 +27,24 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.entity.Freight;
 import com.compremelhor.model.entity.Purchase;
+import com.compremelhor.model.entity.Freight.FreightType;
 import com.compremelhor.model.exception.InvalidEntityException;
+import com.compremelhor.model.exception.UnknownAttributeException;
 import com.compremelhor.model.remote.EJBRemote;
 import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @Path("/purchases/{id:[1-9][0-9]*}/freight")
 @TokenAuthenticated
@@ -74,6 +88,24 @@ public class FreightResource {
 		return freight;
 	}
 	
+	@GET
+	@Path("/find")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Freight getResourceByAttribute(@javax.ws.rs.core.Context UriInfo info) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		info.getQueryParameters(true).forEach((s, v) -> map.put(s, v.get(0)));
+		Freight u = null;
+		try {
+			u  = freightService.find(map);
+		} catch (UnknownAttributeException e) {
+			throw new WebApplicationException(Response.Status.BAD_REQUEST);
+		}
+		
+		if (u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+		return u;
+	}
+
+	
 	@POST
 	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -94,7 +126,10 @@ public class FreightResource {
 			String uri = info.getPath() + "/" + freight.getId();
 			return Response.created(URI.create(uri)).build();
 		} catch (InvalidEntityException e) {
-			return Response.status(406).entity(Entity.json(e.getMessage())).build();
+			ResponseBuilder builder = Response.status(406);
+			builder.header("errors", e.getMessage());
+			return builder.build();
+
 		} catch (Exception e) {
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
@@ -113,6 +148,7 @@ public class FreightResource {
 		Freight current = freightService.find(id);
 		if (current == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
 		
+		freight.setPurchase(p);
 		freight.setId(id);
 		freight.setDateCreated(current.getDateCreated());
 		freight.setLastUpdated(LocalDateTime.now());
@@ -121,7 +157,10 @@ public class FreightResource {
 			freight = freightService.edit(freight);
 			return Response.ok(Entity.entity(freight, MediaType.APPLICATION_JSON)).build();
 		} catch (InvalidEntityException e) {
-			return Response.status(406).entity(Entity.json(e.getMessage())).build();
+			ResponseBuilder builder = Response.status(406);
+			builder.header("errors", e.getMessage());
+			return builder.build();
+
 		} catch (Exception e) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
@@ -143,6 +182,42 @@ public class FreightResource {
 		try (Scanner s = new Scanner(is)) {
 			json = s.useDelimiter("\\A").next();
 		}
-		return new Gson().fromJson(json, Freight.class);
+		try {
+			return new Gson().fromJson(json, Freight.class);
+		} catch(Exception e) {
+			JSONObject jsonObject = new JSONObject(json);
+			
+			Freight freight = new Freight();
+			
+			try {
+				freight.setValueRide(jsonObject.getDouble("valueRide"));
+				freight.setId(jsonObject.getInt("id"));
+			} catch (Exception e1) {}
+			
+			for (FreightType type : FreightType.values()) {
+				if (jsonObject.getString("type") != null && jsonObject.getString("type").trim().toUpperCase().equals(type.toString())) {
+					freight.setType(FreightType.valueOf(jsonObject.getString("type")));
+				}
+			}
+						
+			if (jsonObject.getJSONObject("shipAddress") != null) {
+				JSONObject addressJson = jsonObject.getJSONObject("shipAddress");
+				
+				Address address = new Address();
+				address.setId(addressJson.getInt("id"));
+				freight.setShipAddress(address);
+			}
+			
+			JSONArray jsonArrayDate = jsonObject.getJSONArray("startingDate");
+			if (jsonArrayDate != null) {
+				freight.setStartingDate(LocalDate.of(jsonArrayDate.getInt(0),jsonArrayDate.getInt(1), jsonArrayDate.getInt(2)));
+			}
+			JSONArray jsonArrayTime = jsonObject.getJSONArray("startingTime");
+			if (jsonArrayTime != null) {
+				freight.setStartingTime(LocalTime.of(jsonArrayTime.getInt(0),jsonArrayTime.getInt(1), 0));
+			}
+			
+			return freight;
+		}
 	}
 }

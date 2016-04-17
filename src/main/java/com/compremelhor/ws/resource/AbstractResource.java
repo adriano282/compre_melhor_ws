@@ -3,7 +3,9 @@ package com.compremelhor.ws.resource;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -13,16 +15,21 @@ import javax.inject.Inject;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import com.compremelhor.model.entity.EntityModel;
 import com.compremelhor.model.exception.InvalidEntityException;
+import com.compremelhor.model.exception.UnknownAttributeException;
 import com.compremelhor.model.remote.EJBRemote;
 import com.google.gson.Gson;
 
@@ -113,6 +120,24 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	@GET
+	@Path("/find")
+	@Produces(MediaType.APPLICATION_JSON)
+	public T getResourceByAttribute(@javax.ws.rs.core.Context UriInfo info) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		info.getQueryParameters(true).forEach((s, v) -> map.put(s, v.get(0)));
+		T u = null;
+		try {
+			u  = service.find(map);
+		} catch (UnknownAttributeException e) {
+			throw new WebApplicationException(Response.Status.BAD_REQUEST);
+		}
+		
+		if (u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+		return u;
+	}
+
 	
 	@SuppressWarnings("unchecked")
 	public EJBRemote<EntityModel> lookupService(String jndi) throws NamingException {

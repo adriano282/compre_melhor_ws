@@ -3,10 +3,8 @@ package com.compremelhor.ws.resource.impl;
 import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -26,9 +24,7 @@ import javax.ws.rs.core.UriInfo;
 
 import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.entity.Partner;
-import com.compremelhor.model.entity.Stock;
 import com.compremelhor.model.exception.InvalidEntityException;
-import com.compremelhor.model.exception.UnknownAttributeException;
 import com.compremelhor.model.remote.EJBRemote;
 import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
@@ -111,23 +107,6 @@ public class PartnerResource extends AbstractResource<Partner>{
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 	}	
-	
-	@GET
-	@Path("/")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Partner getResourceByAttribute(@Context UriInfo info) {
-		Map<String, String> map = new HashMap<String,String>();
-		info.getQueryParameters(true).forEach((s, v) -> map.put(s, v.get(0)));
-		Partner u = null;
-		try {
-			u  = service.find(map);
-		} catch (UnknownAttributeException e) {
-			throw new WebApplicationException(Response.Status.BAD_REQUEST);
-		}
-		
-		if (u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
-		return u;
-	}
 
 	private Address getAddressFromInputStream(InputStream is) {
 		String json = "";

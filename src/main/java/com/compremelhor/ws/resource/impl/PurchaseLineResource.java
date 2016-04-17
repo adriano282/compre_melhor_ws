@@ -25,6 +25,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.Response.ResponseBuilder;
 
 import com.compremelhor.model.entity.Purchase;
 import com.compremelhor.model.entity.PurchaseLine;
@@ -100,7 +101,10 @@ public class PurchaseLineResource {
 			String uri = info.getPath() + "/" +line.getId();
 			return Response.created(URI.create(uri)).build();
 		} catch (InvalidEntityException e) {
-			return Response.status(406).entity(Entity.json(e.getMessage())).build();
+			ResponseBuilder builder = Response.status(406);
+			builder.header("errors", e.getMessage());
+			return builder.build();
+
 		} catch (Exception e) {
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
@@ -128,7 +132,10 @@ public class PurchaseLineResource {
 			line = lineService.edit(line);
 			return Response.ok(Entity.entity(line, MediaType.APPLICATION_JSON)).build();
 		} catch (InvalidEntityException e) {
-			return Response.status(406).entity(Entity.json(e.getMessage())).build();
+			ResponseBuilder builder = Response.status(406);
+			builder.header("errors", e.getMessage());
+			return builder.build();
+
 		} catch (Exception e) {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
