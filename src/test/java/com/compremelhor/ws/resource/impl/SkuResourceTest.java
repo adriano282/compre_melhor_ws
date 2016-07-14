@@ -6,7 +6,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.compremelhor.model.entity.Code;
 import com.compremelhor.model.entity.Sku;
 import com.compremelhor.ws.annotation.Order;
 import com.compremelhor.ws.runner.OrderedRunner;
@@ -73,18 +72,14 @@ public class SkuResourceTest extends TestResource<Sku> {
 		
 		// Create Category
 		categoryResource.createCategory();
-	
-		Code code = new Code();
-		code.setType(Code.CodeType.BARCODE);
-		code.setCode("COD001");
 		
 		sku = new Sku();
+		sku.setCode("1234567899999");
 		sku.setName("MAIONESE");
 		sku.setDescription("MAIONESE DE BAIXA CALORIA");
 		sku.setUnit(Sku.UnitType.UN);
-		sku.addCategory(CategoryResourceTest.category);
+		sku.setCategory(CategoryResourceTest.category);
 		sku.setManufacturer(ManufacturerResourceTest.manufacturer);
-		sku.setCode(code);
 		
 		currentResource = createResource(myGson.toJson(sku, Sku.class));
 		sku = getResource();
