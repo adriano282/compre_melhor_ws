@@ -35,7 +35,6 @@ import org.json.JSONObject;
 import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.entity.Freight;
 import com.compremelhor.model.entity.Purchase;
-import com.compremelhor.model.entity.Freight.FreightType;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.exception.UnknownAttributeException;
 import com.compremelhor.model.remote.EJBRemote;
@@ -194,11 +193,11 @@ public class FreightResource {
 				freight.setId(jsonObject.getInt("id"));
 			} catch (Exception e1) {}
 			
-			for (FreightType type : FreightType.values()) {
-				if (jsonObject.getString("type") != null && jsonObject.getString("type").trim().toUpperCase().equals(type.toString())) {
-					freight.setType(FreightType.valueOf(jsonObject.getString("type")));
-				}
-			}
+//			for (FreightType type : FreightType.values()) {
+//				if (jsonObject.getString("type") != null && jsonObject.getString("type").trim().toUpperCase().equals(type.toString())) {
+//					freight.setType(FreightType.valueOf(jsonObject.getString("type")));
+//				}
+//			}
 						
 			if (jsonObject.getJSONObject("shipAddress") != null) {
 				JSONObject addressJson = jsonObject.getJSONObject("shipAddress");

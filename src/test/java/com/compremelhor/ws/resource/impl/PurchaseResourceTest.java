@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 
 import com.compremelhor.model.entity.Freight;
 import com.compremelhor.model.entity.Purchase;
-import com.compremelhor.model.entity.Freight.FreightType;
 import com.compremelhor.model.entity.Purchase.Status;
 import com.compremelhor.model.entity.PurchaseLine;
 import com.compremelhor.ws.annotation.Order;
@@ -52,7 +51,6 @@ public class PurchaseResourceTest extends TestResource<Purchase>{
 		userResourceTest.addAddress();
 				
 		freight.setShipAddress(UserResourceTest.address);
-		freight.setType(FreightType.EXPRESS);
 		
 		Assert.assertNotNull(freight.getShipAddress());
 		freight.setValueRide(50.00);
