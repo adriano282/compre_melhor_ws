@@ -12,6 +12,7 @@
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/AbstractResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/AddressResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/ManufacturerResource.java
+/home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/SyncMobResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/FreightTypeResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/UserResource.java
 /home/adriano/Development/workspace/eclipse_projects/compre_melhor_ws/src/main/java/com/compremelhor/ws/resource/impl/FreightResource.java

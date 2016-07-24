@@ -8,6 +8,7 @@ com/compremelhor/ws/resource/Resource.class
 com/compremelhor/ws/resource/impl/StockResource.class
 com/compremelhor/ws/util/MyClient.class
 com/compremelhor/ws/resource/impl/FreightTypeResource.class
+com/compremelhor/ws/resource/impl/SyncMobResource.class
 com/compremelhor/ws/resource/impl/PurchaseResource.class
 com/compremelhor/ws/util/JsonUtil.class
 com/compremelhor/ws/util/TOKEN.class
