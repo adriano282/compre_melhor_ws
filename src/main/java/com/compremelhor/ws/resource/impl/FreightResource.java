@@ -26,24 +26,22 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.compremelhor.model.entity.Address;
 import com.compremelhor.model.entity.Freight;
+import com.compremelhor.model.entity.FreightType;
 import com.compremelhor.model.entity.Purchase;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.exception.UnknownAttributeException;
 import com.compremelhor.model.remote.EJBRemote;
 import com.compremelhor.ws.annotation.TokenAuthenticated;
 import com.compremelhor.ws.resource.AbstractResource;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 @Path("/purchases/{id:[1-9][0-9]*}/freight")
 @TokenAuthenticated
@@ -189,7 +187,7 @@ public class FreightResource {
 			Freight freight = new Freight();
 			
 			try {
-				freight.setValueRide(jsonObject.getDouble("valueRide"));
+				freight.setRideValue(jsonObject.getDouble("rideValue"));
 				freight.setId(jsonObject.getInt("id"));
 			} catch (Exception e1) {}
 			
@@ -198,7 +196,14 @@ public class FreightResource {
 //					freight.setType(FreightType.valueOf(jsonObject.getString("type")));
 //				}
 //			}
-						
+			
+			if (jsonObject.getJSONObject("freightType") != null) {
+				JSONObject freightTypeJson = jsonObject.getJSONObject("freightType");
+				FreightType freightType = new FreightType();
+				freightType.setId(freightTypeJson.getInt("id"));			
+				freight.setFreightType(freightType);
+			}
+			
 			if (jsonObject.getJSONObject("shipAddress") != null) {
 				JSONObject addressJson = jsonObject.getJSONObject("shipAddress");
 				

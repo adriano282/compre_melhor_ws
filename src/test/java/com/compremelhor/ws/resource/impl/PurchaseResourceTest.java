@@ -53,7 +53,7 @@ public class PurchaseResourceTest extends TestResource<Purchase>{
 		freight.setShipAddress(UserResourceTest.address);
 		
 		Assert.assertNotNull(freight.getShipAddress());
-		freight.setValueRide(50.00);
+		freight.setRideValue(50.00);
 		
 		String uri = APPLICATION_ROOT.concat("purchases/")
 				.concat(String.valueOf(purchase.getId()))

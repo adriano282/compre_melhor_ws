@@ -23,6 +23,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import com.compremelhor.model.entity.Address;
+import com.compremelhor.model.entity.FreightType;
 import com.compremelhor.model.entity.Partner;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
@@ -40,6 +41,16 @@ public class PartnerResource extends AbstractResource<Partner>{
 	public EJBRemote<Partner> lookupService() throws NamingException {
 		return (EJBRemote<Partner>) context
 				.lookup("ejb:/compre_melhor_ws/PartnerEJB!com.compremelhor.model.remote.EJBRemote");
+	}
+	
+	@GET
+	@Path("/{id: [1-9][0-9]*}/freight_types")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<FreightType> getFreightTypes(@PathParam("id") int id) {
+		Set<String> fecthes = new HashSet<>();
+		fecthes.add("freightTypes");
+		Partner p = (Partner) service.find(id, fecthes);
+		return p.getFreightTypes();
 	}
 	
 	@GET

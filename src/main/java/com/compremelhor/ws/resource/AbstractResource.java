@@ -120,6 +120,23 @@ public abstract class AbstractResource<T extends EntityModel> implements Resourc
 			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
 		}
 	}
+
+	@GET
+	@Path("/findAll")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<T> getAllResourceByAttribute(@javax.ws.rs.core.Context UriInfo info) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		info.getQueryParameters(true).forEach((s, v) -> map.put(s, v.get(0)));
+		List<T> u = null;
+		try {
+			u  = service.findAll(map);
+		} catch (UnknownAttributeException e) {
+			throw new WebApplicationException(Response.Status.BAD_REQUEST);
+		}
+		
+		if (u == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
+		return u;
+	}
 	
 	@GET
 	@Path("/find")
