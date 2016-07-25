@@ -24,11 +24,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import com.compremelhor.model.entity.Purchase;
 import com.compremelhor.model.entity.PurchaseLine;
+import com.compremelhor.model.entity.Stock;
 import com.compremelhor.model.exception.InvalidEntityException;
 import com.compremelhor.model.remote.EJBRemote;
 import com.compremelhor.ws.annotation.TokenAuthenticated;
@@ -42,9 +43,12 @@ public class PurchaseLineResource {
 			"ejb:/compre_melhor_ws/PurchaseLineEJB!com.compremelhor.model.remote.EJBRemote";
 	private String jndiPurchase = 
 			"ejb:/compre_melhor_ws/PurchaseEJB!com.compremelhor.model.remote.EJBRemote";
+	private String jndiStock = 
+			"ejb:/compre_melhor_ws/StockEJB!com.compremelhor.model.remote.EJBRemote";
 	
 	private EJBRemote<PurchaseLine> lineService;
 	private EJBRemote<Purchase> purchaseService;
+	private EJBRemote<Stock> stockService;
 	
 	@Inject private Logger logger;
 	
@@ -57,6 +61,7 @@ public class PurchaseLineResource {
 		this.context = new InitialContext(jndiProperties);
 		this.lineService = (EJBRemote<PurchaseLine>) getService(jndiLine);
 		this.purchaseService = (EJBRemote<Purchase>) getService(jndiPurchase);
+		this.stockService = (EJBRemote<Stock>) getService(jndiStock);
 	}
 		
 	public EJBRemote<?> getService(String jndi) throws NamingException {
@@ -95,6 +100,9 @@ public class PurchaseLineResource {
 		line.setPurchase(p);
 		line.setDateCreated(LocalDateTime.now());
 		line.setLastUpdated(LocalDateTime.now());
+		
+		Stock st = stockService.find(line.getStock().getId());
+		line.setStock(st);
 		
 		try {
 			line = lineService.create(line);
