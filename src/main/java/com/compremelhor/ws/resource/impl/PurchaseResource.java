@@ -10,7 +10,7 @@ import com.compremelhor.ws.resource.AbstractResource;
 
 @Path("/purchases")
 @TokenAuthenticated
-public class PurchaseResource extends AbstractResource<Purchase>{
+public class PurchaseResource extends AbstractResource<Purchase> {
 
 	public PurchaseResource() throws NamingException {
 		super(Purchase.class, "purchases");

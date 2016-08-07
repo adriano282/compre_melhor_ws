@@ -155,7 +155,11 @@ public class PurchaseLineResource {
 	public PurchaseLine deleteLine(@PathParam("id") int id) {
 		PurchaseLine t = lineService.find(id);
 		if (t == null) throw new WebApplicationException(Response.Status.NOT_FOUND);
-		lineService.delete(t);
+		try {
+			lineService.delete(t);
+		} catch (Exception e) {
+			throw new WebApplicationException(Response.Status.INTERNAL_SERVER_ERROR);
+		}
 		return t;
 	}
 	
