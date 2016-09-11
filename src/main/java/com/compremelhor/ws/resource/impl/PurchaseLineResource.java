@@ -7,9 +7,7 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
-import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.ws.rs.DELETE;
@@ -49,8 +47,6 @@ public class PurchaseLineResource {
 	private EJBRemote<PurchaseLine> lineService;
 	private EJBRemote<Purchase> purchaseService;
 	private EJBRemote<Stock> stockService;
-	
-	@Inject private Logger logger;
 	
 	protected final javax.naming.Context context;
 	

@@ -1,5 +1,5 @@
 eclipse.preferences.version=1
-org.jboss.tools.common.validator.enableBlock=enabled
+org.jboss.tools.common.validator.enableBlock=disabled
 org.jboss.tools.common.validator.problem.markersBlock=20
 org.jboss.tools.common.validator.problem.wrongBuilderOrder=error
 org.jboss.tools.ws.jaxrs.ui.validator.problem.applicationInvalidTypeHierarchy=error

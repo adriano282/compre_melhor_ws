@@ -1,12 +1,9 @@
 package com.compremelhor.ws.util;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.security.KeyStore;
 import java.security.SecureRandom;
-import java.util.Properties;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManagerFactory;
